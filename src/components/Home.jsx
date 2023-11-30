@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Nav from "./Nav";
 import Footer from "./Footer";
+import { Card } from 'react-bootstrap';
 
 export default function Home() {
     const [photos, setPhotos] = useState([]);
@@ -28,12 +29,17 @@ export default function Home() {
             <div className="homecontentdiv">
                 <h1>This is home</h1>
                 {photos.map((photo) => (
-                    <div key={photo.id} className="photo-container">
-                        <img src={photo.image} alt={photo.photo_name} />
-                        <p>{photo.photo_name}</p>
-                        <p>{photo.user.email}</p>
-                        {/* Add more details or styling as needed */}
-                    </div>
+                    <Card key={photo.id} className="mb-3">
+                        <Card.Img variant="top" src={photo.image} alt={photo.photo_name} />
+                        <Card.Body>
+                            <Card.Title>{photo.photo_name}</Card.Title>
+                            <Card.Text>{photo.comment}</Card.Text>
+                            <Card.Text>
+                                Posted by: {photo.user.name} on {photo.date}
+                            </Card.Text>
+                            {/* Add more details or styling as needed */}
+                        </Card.Body>
+                    </Card>
                 ))}
             </div>
             <div className="footerhomediv">
