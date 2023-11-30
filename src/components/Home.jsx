@@ -5,7 +5,8 @@ import Footer from "./Footer";
 
 export default function Home() {
     const [photos, setPhotos] = useState([]);
-    const [newComment, setNewComment] = useState("");
+    const [newComments, setNewComments] = useState({});
+    const [Comments, setComments] = useState({});
 
     useEffect(() => {
         const getPhotos = async () => {
@@ -21,26 +22,48 @@ export default function Home() {
         getPhotos();
     }, []);
 
+
+    useEffect(() => {
+        const getComments = async () => {
+            try {
+                const response2 = await axios.get(`http://127.0.0.1:8000/comments/`);
+                console.log(response2.data);
+                setComments(response2.data);
+            } catch (error) {
+                console.error("Error fetching Comments:", error);
+            }
+        };
+
+        getComments();
+    }, []);
+
     const handleCommentSubmit = async (photoId) => {
         try {
-            const response = await axios.post(`http://127.0.0.1:8000/photos/${photoId}/comments/`, {
-                comment: newComment,
+            const response1 = await axios.post(`http://127.0.0.1:8000/comments/${photoId}`, {
+                comment: newComments[photoId] || "",
+                rel_photo: photoId,
             });
-
-            setPhotos((prevPhotos) =>
-                prevPhotos.map((photo) =>
-                    photo.id === photoId
-                        ? { ...photo, comments: [...photo.comments, response.data] }
-                        : photo
-                )
-            );
-
-            setNewComment("");
+            console.log(response1);
+    
+            // Update the specific comment for the photo, keeping others unchanged
+            setNewComments((prevComments) => ({
+                ...prevComments,
+                [photoId]: "", // Clear the comment for the specific photo
+            }));
         } catch (error) {
             console.error("Error adding comment:", error);
         }
     };
+    
+    
+    
+    // useEffect to log newComments after it's updated
+    // useEffect(() => {
+    //     console.log("New Comments:", newComments);
+    // }, [newComments]);
 
+    
+    
     return (
         <div className="Homediv">
             <div className="navhomediv">
@@ -54,13 +77,18 @@ export default function Home() {
                             <img src={photo.image} alt={photo.photo_name} className="card-img-top" />
                             <div className="card-body">
                                 <h5 className="card-title">{photo.photo_name}</h5>
-                                <p className="card-text">{photo.comment}</p>
+                                <> 
+                                    Comments:
+                                    <ul>
+                                    {Array.isArray(photo.comments) && photo.comments.map((comment) => (<li key={comment.id}>{comment.comment}</li>))}
+
+                                    </ul>
+                                </>
                                 <p className="card-text">Posted by: {photo.user?.name} on {photo.date}</p>
 
                                 <ul>
-                                    {Array.isArray(photo.comments) && photo.comments.map((comment) => (
-                                        <li key={comment.id}>{comment.comment}</li>
-                                    ))}
+                                {Array.isArray(Comments) && Comments.filter(comment => comment.rel_photo === photo.id).map((filteredComment) => (<li key={filteredComment.id}>{filteredComment.comment}</li>))}
+
                                 </ul>
 
                                 <form
@@ -71,8 +99,13 @@ export default function Home() {
                                 >
                                     <input
                                         type="text"
-                                        value={newComment}
-                                        onChange={(e) => setNewComment(e.target.value)}
+                                        value={newComments[photo.id] || ""}
+                                        onChange={(e) =>
+                                            setNewComments((prevComments) => ({
+                                                ...prevComments,
+                                                [photo.id]: e.target.value,
+                                            }))
+                                        }
                                         placeholder="Add a comment"
                                     />
                                     <button type="submit">Submit</button>
