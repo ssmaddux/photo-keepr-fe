@@ -44,6 +44,10 @@ export default function Home() {
                 rel_photo: photoId,
             });
             console.log(response1);
+
+            // Refetch comments after successfully posting a new comment
+            const response2 = await axios.get(`http://127.0.0.1:8000/comments/`);
+            setComments(response2.data);
     
             // Update the specific comment for the photo, keeping others unchanged
             setNewComments((prevComments) => ({
@@ -77,18 +81,9 @@ export default function Home() {
                             <img src={photo.image} alt={photo.photo_name} className="card-img-top" />
                             <div className="card-body">
                                 <h5 className="card-title">{photo.photo_name}</h5>
-                                <> 
-                                    Comments:
-                                    <ul>
-                                    {Array.isArray(photo.comments) && photo.comments.map((comment) => (<li key={comment.id}>{comment.comment}</li>))}
-
-                                    </ul>
-                                </>
-                                <p className="card-text">Posted by: {photo.user?.name} on {photo.date}</p>
-
+                                <p className="card-text"> Photo posted by: {photo.user?.name} on {photo.date}</p>
                                 <ul>
                                 {Array.isArray(Comments) && Comments.filter(comment => comment.rel_photo === photo.id).map((filteredComment) => (<li key={filteredComment.id}>{filteredComment.comment}</li>))}
-
                                 </ul>
 
                                 <form
