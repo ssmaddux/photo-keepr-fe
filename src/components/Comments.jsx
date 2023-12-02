@@ -4,9 +4,11 @@ import Nav from "./Nav";
 import Footer from "./Footer";
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 export default function Comments() {
     const [comments, setComments] = useState([]);
+    const [updatedComments, setUpdatedComments] = useState({});
 
     useEffect(() => {
         const getComments = async () => {
@@ -32,7 +34,34 @@ export default function Comments() {
         }
     };
 
-    // Add functionality for updating comments as needed
+    const handleUpdateComment = async (commentId) => {
+        try {
+            await axios.put(`http://127.0.0.1:8000/comment/${commentId}`, {
+                comment: updatedComments[commentId],
+            });
+            // Update the comment in the state
+            setComments((prevComments) =>
+                prevComments.map((comment) =>
+                    comment.id === commentId ? { ...comment, comment: updatedComments[commentId] } : comment
+                )
+            );
+
+            setUpdatedComments((prev) => ({
+                ...prev,
+                [commentId]: "",
+            }));
+            
+        } catch (error) {
+            console.error("Error updating comment:", error);
+        }
+    };
+
+    const handleInputChange = (commentId, value) => {
+        setUpdatedComments((prev) => ({
+            ...prev,
+            [commentId]: value,
+        }));
+    };
 
     return (
         <div className="commentsmaindiv">
@@ -43,11 +72,20 @@ export default function Comments() {
                     <Card.Body>
                         <Card.Title>{comment.comment}</Card.Title>
                         <Card.Subtitle className="mb-2 text-muted">Photo ID: {comment.rel_photo}</Card.Subtitle>
-                        {/* Add other details you want to display */}
+                        <Form.Group controlId={`commentUpdate${comment.id}`}>
+                            <Form.Control
+                                type="text"
+                                placeholder="Update Comment"
+                                value={updatedComments[comment.id] || ""}
+                                onChange={(e) => handleInputChange(comment.id, e.target.value)}
+                            />
+                        </Form.Group>
+                        <Button variant="primary" onClick={() => handleUpdateComment(comment.id)}>
+                            Update
+                        </Button>
                         <Button variant="danger" onClick={() => handleDeleteComment(comment.id)}>
                             Delete
                         </Button>
-                        {/* Add update functionality */}
                     </Card.Body>
                 </Card>
             ))}
