@@ -66,7 +66,7 @@ export default function Comments() {
     return (
         <div className="commentsmaindiv">
             <Nav />
-            <h3>This is comments</h3>
+            <h3>Edit or delete your comments here</h3>
             {comments.map((comment) => (
                 <Card key={comment.id} className="mb-3">
                     <Card.Body>

@@ -74,7 +74,7 @@ export default function Home() {
                 <Nav />
             </div>
             <div className="homecontentdiv bg-dark p-4">
-                <h1 className="text-light">This is home</h1>
+                <h1 className="text-light">Welcome to Photo Keepr</h1>
                 {Array.isArray(photos) && photos.length > 0 ? (
                     photos.map((photo) => (
                         <div key={photo.id} className="card mb-3 bg-light text-dark">
