@@ -27,7 +27,7 @@ export default function Comments() {
     const handleDeleteComment = async (commentId) => {
         try {
             await axios.delete(`http://127.0.0.1:8000/comment/${commentId}`);
-            // Remove the deleted comment from the state
+            // Remove the deleted comment from the state, prevComments is just a paramiter it can be any name however it represents the previous state of Comments before we filter. then we pass it into a filter function that creates a new array.The comment inside filter is just a parameter is could be named anything, then we take the  comment which in this case is a comment and we check each one to see if the id matches the commentId we got when the on click happened in the return statement.
             setComments((prevComments) => prevComments.filter(comment => comment.id !== commentId));
         } catch (error) {
             console.error("Error deleting comment:", error);
@@ -50,7 +50,7 @@ export default function Comments() {
                 ...prev,
                 [commentId]: "",
             }));
-            
+
         } catch (error) {
             console.error("Error updating comment:", error);
         }

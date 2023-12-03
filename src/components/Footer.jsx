@@ -10,7 +10,7 @@ function Footer() {
         <Navbar bg="dark" data-bs-theme="dark">
           <Container>
             <Nav className="me-auto">
-              <Nav.Link href="linkedin">Linkedin</Nav.Link>
+            <Nav.Link href="https://www.linkedin.com/in/sagemaddux/">Linkedin</Nav.Link>
               <Nav.Link href="home">Home</Nav.Link>
             </Nav>
           </Container>
