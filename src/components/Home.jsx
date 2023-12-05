@@ -3,6 +3,7 @@ import axios from 'axios';
 import Nav from "./Nav";
 import Footer from "./Footer";
 import Photos from "./Photos";
+import {Card} from "react-bootstrap";
 
 export default function Home() {
     const [photos, setPhotos] = useState([]);
@@ -94,51 +95,66 @@ export default function Home() {
     
     return (
         <div className="Homediv">
-            <div className="navhomediv">
-                <Nav />
-            </div>
-            <div className="homecontentdiv bg-dark p-4">
-                <h1 className="text-light">Welcome to Photo Keepr</h1>
-                {Array.isArray(photos) && photos.length > 0 ? (
-                    photos.map((photo) => (
-                        <div key={photo.id} className="card mb-3 bg-light text-dark">
-                            <img src={photo.image} alt={photo.photo_name} className="card-img-top" />
-                            <div className="card-body">
-                                <h5 className="card-title">{photo.photo_name}</h5>
-                                <p className="card-text"> Photo posted by: {users.filter(user => user.id === photo.user)[0]?.name} on {photo.date}</p>
-                                <ul>
-                                {Array.isArray(Comments) && Comments.filter(comment => comment.rel_photo === photo.id).map((filteredComment) => (<li key={filteredComment.id}>{filteredComment.comment}</li>))}
-                                </ul>
-
-                                <form
-                                    onSubmit={(e) => {
-                                        e.preventDefault();
-                                        handleCommentSubmit(photo.id);
-                                    }}
-                                >
-                                    <input
-                                        type="text"
-                                        value={newComments[photo.id] || ""}
-                                        onChange={(e) =>
-                                            setNewComments((prevComments) => ({
-                                                ...prevComments,
-                                                [photo.id]: e.target.value,
-                                            }))
-                                        }
-                                        placeholder="Add a comment"
-                                    />
-                                    <button type="submit">Submit</button>
-                                </form>
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <p>No photos available.</p>
-                )}
-            </div>
-            <div className="footerhomediv">
-                <Footer />
-            </div>
+          <div className="navhomediv">
+            <Nav />
+          </div>
+          <div className="homecontentdiv bg-dark p-4">
+            <h1 className="text-light">Welcome to Photo Keepr</h1>
+            {Array.isArray(photos) && photos.length > 0 ? (
+              photos.map((photo) => (
+                <div key={photo.id} className="card mb-3 bg-light text-dark">
+                  <img src={photo.image} alt={photo.photo_name} className="card-img-top" />
+                  <div className="card-body">
+                    <h5 className="card-title">{photo.photo_name}</h5>
+      
+                    {/* User Info */}
+                    <div className="user-info bg-light p-2 mb-2">
+                      <p className="card-text">
+                        Photo posted by: {users.filter(user => user.id === photo.user)[0]?.name} on {photo.date}
+                      </p>
+                    </div>
+      
+                    {/* Comments */}
+                    
+                    <div className="comments-section bg-dark-grey text-dark p-2">
+                      <ul className="list-unstyled">
+                        {Array.isArray(Comments) && Comments.filter(comment => comment.rel_photo === photo.id).map((filteredComment) => (
+                          <li key={filteredComment.id} className="mb-2">{filteredComment.comment}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    
+      
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        handleCommentSubmit(photo.id);
+                      }}
+                    >
+                      <input 
+                        type="text"
+                        value={newComments[photo.id] || ""}
+                        onChange={(e) =>
+                          setNewComments((prevComments) => ({
+                            ...prevComments,
+                            [photo.id]: e.target.value,
+                          }))
+                        }
+                        placeholder="Add a comment"
+                      />
+                      <button type="submit">Submit</button>
+                    </form>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No photos available.</p>
+            )}
+          </div>
+          <div className="footerhomediv">
+            <Footer />
+          </div>
         </div>
-    );
+      );
 }
