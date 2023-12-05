@@ -2,11 +2,35 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Nav from "./Nav";
 import Footer from "./Footer";
+import Photos from "./Photos";
 
 export default function Home() {
     const [photos, setPhotos] = useState([]);
     const [newComments, setNewComments] = useState({});
     const [Comments, setComments] = useState({});
+    const [users, setUsers] = useState({});
+
+
+
+    useEffect(() => {
+        const getUsers = async () => {
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/users/`);
+                console.log(response.data);
+                setUsers(response.data);
+            } catch (error) {
+                console.error("Error fetching users:", error);
+            }
+        };
+
+        getUsers();
+    }, []);
+
+    // const handleUserSubmit = async (userId) => {
+    //     users.id === userId
+    //     return users.name
+    // }
+
 
     useEffect(() => {
         const getPhotos = async () => {
@@ -81,7 +105,7 @@ export default function Home() {
                             <img src={photo.image} alt={photo.photo_name} className="card-img-top" />
                             <div className="card-body">
                                 <h5 className="card-title">{photo.photo_name}</h5>
-                                <p className="card-text"> Photo posted by: {photo.user?.name} on {photo.date}</p>
+                                <p className="card-text"> Photo posted by: {users.filter(user => user.id === photo.user)[0]?.name} on {photo.date}</p>
                                 <ul>
                                 {Array.isArray(Comments) && Comments.filter(comment => comment.rel_photo === photo.id).map((filteredComment) => (<li key={filteredComment.id}>{filteredComment.comment}</li>))}
                                 </ul>

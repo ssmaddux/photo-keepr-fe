@@ -46,7 +46,13 @@ export default function Photos() {
             const formData = new FormData();
             formData.append('image', newPhoto);
             formData.append('user', selectedUser);
-            formData.append('photo_name', photoName); // Add this line
+            formData.append('photo_name', photoName); 
+
+            const currentDate = new Date();
+            const formattedDate = currentDate.toISOString().split('T')[0];
+            formData.append('date', formattedDate);
+            
+
     
             // Post request
             await axios.post(`http://127.0.0.1:8000/photos/upload/`, formData);
