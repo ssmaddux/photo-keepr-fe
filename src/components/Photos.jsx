@@ -6,6 +6,8 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
+import Form  from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
 export default function Photos() {
     const [photos, setPhotos] = useState([]);
@@ -72,20 +74,33 @@ export default function Photos() {
             <Nav />
             <h3>View your photos here</h3>
             <Container>
-                <input type="file" accept="image/*" onChange={handlePhotoChange} />
-                <input type="text" placeholder="Enter photo name" value={photoName} onChange={(e)=> setPhotoName(e.target.value)}/>
+            <Form>
+                <Form.Group controlId="formFile" className="mb-3">
+                    <Form.Label>Choose a photo</Form.Label>
+                    <Form.Control type="file" accept="image/*" onChange={handlePhotoChange} />
+                </Form.Group>
                 
-                {/* Dropdown to select a user */}
-                <select onChange={handleUserChange}>
-                    <option value="">Select a user</option>
-                    {users.map((user) => (
-                        <option key={user.id} value={user.id}>
-                            {user.name}
-                        </option>
-                    ))}
-                </select>
+                <Form.Group controlId="photoName" className="mb-3">
+                    <Form.Label>Enter photo name</Form.Label>
+                    <Form.Control type="text" placeholder="Photo Name" value={photoName} onChange={(e) => setPhotoName(e.target.value)} />
+                </Form.Group>
 
-                <button onClick={handleUpload}>Upload Photo</button>
+                <Form.Group controlId="userSelect" className="mb-3">
+                    <Form.Label>Select a user</Form.Label>
+                    <Form.Select onChange={handleUserChange}>
+                        <option value="">Choose...</option>
+                        {users.map((user) => (
+                            <option key={user.id} value={user.id}>
+                                {user.name}
+                            </option>
+                        ))}
+                    </Form.Select>
+                </Form.Group>
+
+                <Button variant="primary" onClick={handleUpload}>
+                    Upload Photo
+                </Button>
+            </Form>
 
                 {photos.map((photo, index) => (
                     index % 2 === 0 && (
