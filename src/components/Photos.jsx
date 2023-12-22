@@ -88,7 +88,7 @@ export default function Photos() {
                 <Form.Group controlId="userSelect" className="mb-3">
                     <Form.Label>Select a user</Form.Label>
                     <Form.Select onChange={handleUserChange}>
-                        <option value="">Choose...</option>
+                        <option value="">user</option>
                         {users.map((user) => (
                             <option key={user.id} value={user.id}>
                                 {user.name}
